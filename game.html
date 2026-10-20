@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна 5 — Міні-гра JS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #game-zone {
+            width: 100%;
+            height: 300px;
+            background-color: #ecf0f1;
+            border: 2px dashed #2c3e50;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        #target {
+            width: 50px;
+            height: 50px;
+            font-size: 35px;
+            line-height: 50px;
+            text-align: center;
+            position: absolute;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>POWER GYM — Міні-гра «Спіймай гантелю»</h1>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="schedule.html">Графік</a></li>
+            <li><a href="requirements.html">Вимоги</a></li>
+            <li><a href="apply.html">Заявка</a></li>
+            <li><a href="animation.html">Анімація JS</a></li>
+            <li><a href="game.html">Міні-гра JS</a></li>
+        </ul>
+    </div>
+
+    <div id="container">
+        <div id="main-content">
+            <h2>Міні-гра на реакцію</h2>
+            <p>Клікайте на гантелю 🏋️‍♂️ якнайшвидше, поки вона не змінила позицію!</p>
+            
+            <div class="stats">
+                <div>Рахунок: <span id="score">0</span></div>
+                <div>Час: <span id="timer">15</span> с</div>
+            </div>
+
+            <div id="game-zone">
+                <div id="target">🏋️‍♂️</div>
+            </div>
+
+            <button id="start-game-btn" class="btn" style="margin-top: 15px; width: 100%;">Розпочати гру</button>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2026 POWER GYM. Усі права захищені.</p>
+    </div>
+
+    <script>
+        const target = document.getElementById('target');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const startBtn = document.getElementById('start-game-btn');
+        const gameZone = document.getElementById('game-zone');
+
+        let score = 0;
+        let timeLeft = 15;
+        let gameInterval = null;
+        let timerInterval = null;
+
+        function moveTarget() {
+            const maxX = gameZone.clientWidth - 60;
+            const maxY = gameZone.clientHeight - 60;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            target.style.left = `${randomX}px`;
+            target.style.top = `${randomY}px`;
+        }
+
+        target.addEventListener('click', () => {
+            if (timeLeft > 0 && gameInterval) {
+                score++;
+                scoreEl.textContent = score;
+                moveTarget();
+            }
+        });
+
+        startBtn.addEventListener('click', () => {
+            score = 0;
+            timeLeft = 15;
+            scoreEl.textContent = score;
+            timerEl.textContent = timeLeft;
+            startBtn.disabled = true;
+
+            moveTarget();
+
+            gameInterval = setInterval(moveTarget, 800);
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(gameInterval);
+                    clearInterval(timerInterval);
+                    alert(`Гру закінчено! Твій рахунок: ${score}`);
+                    startBtn.disabled = false;
+                    gameInterval = null;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

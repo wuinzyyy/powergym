@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна 5 — Анімація JS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .anim-box {
+            width: 100px;
+            height: 100px;
+            background-color: #e74c3c;
+            border-radius: 8px;
+            margin: 20px auto;
+            position: relative;
+            left: 0;
+            transition: transform 0.1s linear;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>POWER GYM — Анімація JavaScript</h1>
+    </div>
+
+    <div id="nav">
+        <ul>
+            <li><a href="index.html">Головна</a></li>
+            <li><a href="schedule.html">Графік</a></li>
+            <li><a href="requirements.html">Вимоги</a></li>
+            <li><a href="apply.html">Заявка</a></li>
+            <li><a href="animation.html">Анімація JS</a></li>
+            <li><a href="game.html">Міні-гра JS</a></li>
+        </ul>
+    </div>
+
+    <div id="container">
+        <div id="main-content">
+            <h2>Керування анімацією через JavaScript</h2>
+            <p>Використовуйте кнопки нижче, щоб запускати, зупиняти та скидати анімацію квадрата.</p>
+            
+            <!-- Анімований об'єкт -->
+            <div id="box" class="anim-box"></div>
+
+            <!-- Панель керування -->
+            <div class="controls">
+                <button class="btn" id="startBtn">Старт</button>
+                <button class="btn" id="stopBtn">Стоп</button>
+                <button class="btn" id="resetBtn">Скинути</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2026 POWER GYM. Усі права захищені.</p>
+    </div>
+
+    <!-- JavaScript код анімації -->
+    <script>
+        const box = document.getElementById('box');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let position = 0;
+        let animationId = null;
+        let isRunning = false;
+
+        function animate() {
+            position += 2;
+            if (position > 300) {
+                position = -300; // Повертається з іншого боку
+            }
+            box.style.transform = `translateX(${position}px) rotate(${position}deg)`;
+            animationId = requestAnimationFrame(animate);
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                animationId = requestAnimationFrame(animate);
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (isRunning) {
+                isRunning = false;
+                cancelAnimationFrame(animationId);
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            isRunning = false;
+            cancelAnimationFrame(animationId);
+            position = 0;
+            box.style.transform = `translateX(0px) rotate(0deg)`;
+        });
+    </script>
+</body>
+</html>
